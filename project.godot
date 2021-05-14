@@ -8,9 +8,14 @@
 
 config_version=4
 
+_global_script_classes=[  ]
+_global_script_class_icons={
+
+}
+
 [application]
 
-config/name="PlayerMovementTest"
+config/name="Asteroids"
 run/main_scene="res://src/Node2D.tscn"
 config/icon="res://assets/icon.png"
 
