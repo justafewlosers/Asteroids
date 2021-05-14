@@ -17,7 +17,6 @@ func thruster():
 		thrust = Vector2(ENGINE_THRUST, 0)
 		$plume.visible = true
 	else:
-		thrust = Vector2(max(thrust.x, 0), 0)
 		$plume.visible = false
 		
 func rotate(delta):
@@ -35,7 +34,7 @@ func get_input(delta):
 	
 func _physics_process(delta):
 	get_input(delta)
-	set_applied_force((10 * thrust.rotated(rotation)) * delta * UP.y)
+	set_applied_force((10 * thrust.rotated(rotation)) * delta)
 	set_applied_torque((rot_dir * SPIN_THRUST) * delta)
 	
 func _integrate_forces(state):

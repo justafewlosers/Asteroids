@@ -12,6 +12,7 @@
 position = Vector2( 602.099, 354.97 )
 mass = 0.04
 gravity_scale = 0.0
+linear_damp = 0.4
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
@@ -25,6 +26,5 @@ scale = Vector2( 0.015, 0.01 )
 shape = SubResource( 1 )
 
 [node name="plume" parent="KinematicBody2D" instance=ExtResource( 3 )]
-visible = false
 position = Vector2( -90, 0 )
 rotation = -1.5708
