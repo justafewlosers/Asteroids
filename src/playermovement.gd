@@ -15,8 +15,10 @@ func thruster():
 	thrust = Vector2(0, 0)
 	if Input.is_action_pressed("up"):
 		thrust = Vector2(ENGINE_THRUST, 0)
+		$plume.visible = true
 	else:
 		thrust = Vector2(max(thrust.x, 0), 0)
+		$plume.visible = false
 		
 func rotate(delta):
 	rot_dir = 0.0
