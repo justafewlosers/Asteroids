@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/sprites/spaceship.png" type="Texture" id=1]
 [ext_resource path="res://src/playermovement.gd" type="Script" id=2]
-[ext_resource path="res://src/plume.tscn" type="PackedScene" id=3]
+[ext_resource path="res://common/plume.tscn" type="PackedScene" id=3]
+[ext_resource path="res://common/blast.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/sfx/thrustsfx.wav" type="AudioStream" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -12,7 +14,10 @@
 position = Vector2( 602.099, 354.97 )
 mass = 0.04
 gravity_scale = 0.0
+linear_damp = 0.4
+angular_damp = 1.0
 script = ExtResource( 2 )
+bullet = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
 position = Vector2( 4.82166, -0.885834 )
@@ -25,6 +30,12 @@ scale = Vector2( 0.015, 0.01 )
 shape = SubResource( 1 )
 
 [node name="plume" parent="KinematicBody2D" instance=ExtResource( 3 )]
-visible = false
 position = Vector2( -90, 0 )
 rotation = -1.5708
+
+[node name="blaster" type="Position2D" parent="KinematicBody2D"]
+show_behind_parent = true
+position = Vector2( 70.7192, -0.529724 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="KinematicBody2D"]
+stream = ExtResource( 5 )

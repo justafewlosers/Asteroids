@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://src/blast.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/blast.gd" type="Script" id=2]
+[ext_resource path="res://assets/sprites/blast2.png" type="Texture" id=3]
+[ext_resource path="res://src/plume.shader" type="Shader" id=4]
+[ext_resource path="res://assets/sfx/blastsfx.wav" type="AudioStream" id=5]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 4 )
+shader_param/transparent = Color( 0, 0, 0, 0 )
+shader_param/inner = Color( 0.701961, 0.996078, 0.65098, 1 )
+shader_param/outer = Color( 0.12549, 0.890196, 0.101961, 1 )
+shader_param/inner_threshold = 0.4
+shader_param/outer_threshold = 0.15
+shader_param/soft_edge = 0.04
+shader_param/center = Vector2( 0.5, 0.8 )
+shader_param/OCTAVES = 6
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 6.36011
+
+[node name="blast" type="Area2D"]
+show_behind_parent = true
+position = Vector2( 935.837, 353.654 )
+script = ExtResource( 2 )
+
+[node name="blastsprite" type="Sprite" parent="."]
+show_behind_parent = true
+position = Vector2( 24.7852, -0.105713 )
+scale = Vector2( 0.146473, 0.124582 )
+texture = ExtResource( 3 )
+
+[node name="blasteffect" parent="blastsprite" instance=ExtResource( 1 )]
+show_behind_parent = true
+material = SubResource( 1 )
+position = Vector2( -205, 1.78345 )
+rotation = -1.5708
+scale = Vector2( 0.896201, 8.30761 )
+
+[node name="blastcollider" type="CollisionShape2D" parent="."]
+show_behind_parent = true
+position = Vector2( 24.6184, 0.0405273 )
+rotation = 1.5708
+scale = Vector2( 0.146473, 0.124582 )
+shape = SubResource( 2 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+autoplay = true
