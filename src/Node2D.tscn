@@ -15,6 +15,7 @@ position = Vector2( 602.099, 354.97 )
 mass = 0.04
 gravity_scale = 0.0
 linear_damp = 0.4
+angular_damp = 1.0
 script = ExtResource( 2 )
 bullet = ExtResource( 4 )
 

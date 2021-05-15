@@ -2,7 +2,6 @@ extends RigidBody2D
 
 export (PackedScene) var bullet
 
-const UP = Vector2(0, 1)
 const ENGINE_THRUST = 100
 const SPIN_THRUST = 12
 
@@ -16,6 +15,7 @@ var next_attack_time = 0
 var burst = 0
 var burst_cap = 3
 var burst_cd = 300
+var full_auto = false
 
 func _ready():
 	screensize = get_viewport().get_visible_rect().size
@@ -28,14 +28,19 @@ func shoot():
 	var b = bullet.instance()
 	var now = OS.get_ticks_msec()
 	if now >= next_attack_time:
-		if burst < burst_cap:
+		if full_auto == false:
+			if burst < burst_cap:
+				owner.add_child(b)
+				b.transform = $blaster.global_transform
+				next_attack_time = now + attack_cooldown
+				burst = burst + 1
+			elif burst == burst_cap:
+				next_attack_time = now + burst_cd
+				burst = 0
+		elif full_auto == true:
 			owner.add_child(b)
 			b.transform = $blaster.global_transform
 			next_attack_time = now + attack_cooldown
-			burst = burst + 1
-		elif burst == burst_cap:
-			next_attack_time = now + burst_cd
-			burst = 0
 		
 func thrust_sound():
 	if Input.is_action_just_pressed("up"):
@@ -62,11 +67,19 @@ func rotate(delta):
 		rot_dir = max(rot_dir - 1, -10) * delta
 	else:
 		rot_dir = lerp(rot_dir, 0, 12)
-	
+
+func auto():
+	if Input.is_action_just_pressed("rapidfire"):
+		if full_auto == false:
+			full_auto = true
+		elif full_auto == true:
+			full_auto = false
+
 func get_input(delta):
 	thruster()
 	rotate(delta)
 	blaster()
+	auto()
 	
 func _physics_process(delta):
 	get_input(delta)
