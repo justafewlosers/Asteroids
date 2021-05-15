@@ -34,7 +34,7 @@ texture = ExtResource( 3 )
 [node name="blasteffect" parent="blastsprite" instance=ExtResource( 1 )]
 show_behind_parent = true
 material = SubResource( 1 )
-position = Vector2( -205, 1.78345 )
+position = Vector2( -148.242, 1.78345 )
 rotation = -1.5708
 scale = Vector2( 0.896201, 8.30761 )
 

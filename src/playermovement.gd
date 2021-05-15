@@ -1,6 +1,7 @@
 extends RigidBody2D
 
 export (PackedScene) var bullet
+export (PackedScene) var blast
 
 const ENGINE_THRUST = 100
 const SPIN_THRUST = 12
@@ -10,12 +11,13 @@ var rot_dir = 0
 var screensize
 var sound_played = false
 
-var attack_cooldown = 100
+var attack_cooldown
 var next_attack_time = 0
 var burst = 0
 var burst_cap = 4
-var burst_cd = 400
+var burst_cd = 450
 var full_auto = false
+var can_shoot
 
 func _ready():
 	screensize = get_viewport().get_visible_rect().size
@@ -34,28 +36,39 @@ func _integrate_forces(state):
 
 func auto():
 	if Input.is_action_just_pressed("rapidfire"):
-		if full_auto == false:
-			full_auto = true
-		elif full_auto == true:
-			full_auto = false
+		full_auto = ! full_auto
 
 func shoot():
 	var b = bullet.instance()
+	var c = blast.instance()
 	var now = OS.get_ticks_msec()
 	if now >= next_attack_time:
 		if full_auto == false:
 			if burst < burst_cap:
-				owner.add_child(b)
-				b.transform = $blaster.global_transform
-				next_attack_time = now + attack_cooldown
+				can_shoot = true
+				attack_cooldown = 100
 				burst = burst + 1
 			elif burst == burst_cap:
+				can_shoot = false
 				next_attack_time = now + burst_cd
 				burst = 0
-		elif full_auto == true:
+		elif full_auto:
+			attack_cooldown = 200
+			can_shoot = true
+		if can_shoot:
+			var t = Timer.new()
 			owner.add_child(b)
+			owner.add_child(c)
 			b.transform = $blaster.global_transform
+			c.transform = $blaster.global_transform
 			next_attack_time = now + attack_cooldown
+			t.set_wait_time(0.03)
+			t.set_one_shot(true)
+			self.add_child(t)
+			t.start()
+			yield(t, "timeout")
+			owner.remove_child(c)
+			
 
 func blaster():
 	if Input.is_action_pressed("shoot"):
