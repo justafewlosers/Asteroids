@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/icon.png" type="Texture" id=1]
+[ext_resource path="res://src/background.shader" type="Shader" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+shader_param/transparent = Color( 0.0509804, 0.027451, 0.0666667, 1 )
+shader_param/inner = Color( 0.356863, 0.160784, 0.490196, 1 )
+shader_param/outer = Color( 0.2, 0.0431373, 0.317647, 1 )
+shader_param/inner_threshold = 0.03
+shader_param/outer_threshold = 0.4
+shader_param/soft_edge = 0.9
+shader_param/center = Vector2( 0.5, 0.8 )
+shader_param/OCTAVES = 6
+
+[node name="Backgroud" type="Sprite"]
+material = SubResource( 1 )
+position = Vector2( 651.958, 373.347 )
+scale = Vector2( 20.6119, 11.8495 )
+texture = ExtResource( 1 )
