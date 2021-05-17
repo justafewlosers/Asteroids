@@ -56,4 +56,5 @@ mode = 3
 mass = 0.00102041
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2( 32.5269, 0.353577 )
 shape = SubResource( 3 )
