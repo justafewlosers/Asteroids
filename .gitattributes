@@ -1,3 +1,5 @@
 assets/icon.png filter=lfs diff=lfs merge=lfs -text
 assets/icon.png.import filter=lfs diff=lfs merge=lfs -text
 assets/sprites filter=lfs diff=lfs merge=lfs -text
+assets/music/asteroids.ogg filter=lfs diff=lfs merge=lfs -text
+assets/music/asteroids.ogg.import filter=lfs diff=lfs merge=lfs -text
