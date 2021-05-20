@@ -1,12 +1,13 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/sprites/spaceship.png" type="Texture" id=1]
-[ext_resource path="res://src/playermovement.gd" type="Script" id=2]
+[ext_resource path="res://common/asteroid.tscn" type="PackedScene" id=2]
 [ext_resource path="res://common/plume.tscn" type="PackedScene" id=3]
-[ext_resource path="res://common/blast.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/playermovement.gd" type="Script" id=4]
 [ext_resource path="res://assets/sfx/thrustsfx.wav" type="AudioStream" id=5]
 [ext_resource path="res://src/Backgroud.tscn" type="PackedScene" id=6]
 [ext_resource path="res://common/blast2.tscn" type="PackedScene" id=7]
+[ext_resource path="res://common/blast.tscn" type="PackedScene" id=8]
 
 [node name="Asteroid" type="Node2D"]
 
@@ -16,8 +17,8 @@ mass = 0.04
 gravity_scale = 0.0
 linear_damp = 0.4
 angular_damp = 1.0
-script = ExtResource( 2 )
-bullet = ExtResource( 4 )
+script = ExtResource( 4 )
+bullet = ExtResource( 8 )
 blast = ExtResource( 7 )
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
@@ -47,3 +48,6 @@ polygon = PoolVector2Array( -25.2505, 7655.26, 19.9091, 2397.68, 33.947, 2437.41
 
 [node name="Backgroud" parent="." instance=ExtResource( 6 )]
 z_index = -1
+
+[node name="asteroid" parent="." instance=ExtResource( 2 )]
+position = Vector2( 899.682, 345.724 )
