@@ -2,15 +2,19 @@ extends RigidBody2D
 
 export (PackedScene) var bullet
 export (PackedScene) var blast
+export (PackedScene) var spawn
+export (PackedScene) var explode
 
 const ENGINE_THRUST = 100
 const SPIN_THRUST = 12
 
+#movement variables
 var thrust = Vector2()
 var rot_dir: float = 0.0
 var screensize
 var sound_played = false
 
+#attack variables
 var attack_cooldown
 var next_attack_time = 0
 var burst = 0
@@ -19,9 +23,12 @@ var burst_cd = 450
 var full_auto = false
 var can_shoot
 
+var is_dead
+
 func _ready():
 	screensize = get_viewport().get_visible_rect().size
 
+#screenwrapping
 func _integrate_forces(state):
 	var xform = state.get_transform()
 	if xform.origin.x > screensize.x:
@@ -34,10 +41,12 @@ func _integrate_forces(state):
 		xform.origin.y = screensize.y
 	state.set_transform(xform)
 
+#toggles fire mode
 func auto():
 	if Input.is_action_just_pressed("rapidfire"):
 		full_auto = ! full_auto
 
+#checks ability to shoot and shoots
 func shoot():
 	var b = bullet.instance()
 	var c = blast.instance()
@@ -70,16 +79,18 @@ func shoot():
 			owner.remove_child(c)
 			
 
+#input for shooting
 func blaster():
 	if Input.is_action_pressed("shoot"):
 		shoot()
 
+#audio controller for thrust
 func thrust_sound():
-	if Input.is_action_just_pressed("up"):
-		if !sound_played:
-			sound_played = true
-			$AudioStreamPlayer.play()
+	if !sound_played:
+		sound_played = true
+		$AudioStreamPlayer.play()
 
+#defines thrust var and controls thrust vfx and sfx
 func thruster():
 	thrust = Vector2(0, 0)
 	if Input.is_action_pressed("up"):
@@ -91,6 +102,7 @@ func thruster():
 		$AudioStreamPlayer.stop()
 		sound_played = false
 
+#defines rotation variable
 func rotate(delta):
 	if Input.is_action_pressed("right"):
 		rot_dir = min(rot_dir + 100, 1000)
@@ -99,13 +111,29 @@ func rotate(delta):
 	else:
 		rot_dir = lerp(rot_dir, 0, 1)
 
+#death controller
+func die():
+	is_dead = true
+	var t = Timer.new()
+	t.set_wait_time(1)
+	t.set_one_shot(true)
+	self.add_child(t)
+	t.start()
+	yield(t, "timeout")
+	owner.remove_child(spawn)
+
+#groups all control componenet major functions
 func get_input(delta):
 	thruster()
 	rotate(delta)
 	blaster()
 	auto()
 
+#runs per physics update | sets force and torque
 func _physics_process(delta):
-	get_input(delta)
+	if is_dead:
+		pass
+	else:
+		get_input(delta)
 	set_applied_force((10 * thrust.rotated(rotation)) * delta)
 	set_applied_torque((rot_dir * SPIN_THRUST) * delta)
