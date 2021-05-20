@@ -10,7 +10,7 @@ const SPIN_THRUST = 12
 
 #movement variables
 var thrust = Vector2()
-var rot_dir = 0
+var rot_dir: float = 0.0
 var screensize
 var sound_played = false
 
@@ -71,7 +71,7 @@ func shoot():
 			b.transform = $blaster.global_transform
 			c.transform = $blaster.global_transform
 			next_attack_time = now + attack_cooldown
-			t.set_wait_time(0.03)
+			t.set_wait_time(0.1)
 			t.set_one_shot(true)
 			self.add_child(t)
 			t.start()
@@ -104,13 +104,12 @@ func thruster():
 
 #defines rotation variable
 func rotate(delta):
-	rot_dir = 0.0
 	if Input.is_action_pressed("right"):
-		rot_dir = min(rot_dir + 1, 10) * delta
+		rot_dir = min(rot_dir + 100, 1000)
 	elif Input.is_action_pressed("left"):
-		rot_dir = max(rot_dir - 1, -10) * delta
+		rot_dir = max(rot_dir - 100, -1000)
 	else:
-		rot_dir = lerp(rot_dir, 0, 12)
+		rot_dir = lerp(rot_dir, 0, 1)
 
 #death controller
 func die():
