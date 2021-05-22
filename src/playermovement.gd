@@ -1,9 +1,9 @@
 extends RigidBody2D
 
-export (PackedScene) var bullet
-export (PackedScene) var blast
+export (PackedScene) var bullet: PackedScene
+export (PackedScene) var blast: PackedScene
 export (PackedScene) var spawn
-export (PackedScene) var explode
+export (PackedScene) var explode: PackedScene
 
 const ENGINE_THRUST = 100
 const SPIN_THRUST = 12
@@ -11,17 +11,17 @@ const SPIN_THRUST = 12
 #movement variables
 var thrust = Vector2()
 var rot_dir: float = 0.0
-var screensize
+var screensize: Vector2
 var sound_played = false
 
 #attack variables
-var attack_cooldown
-var next_attack_time = 0
-var burst = 0
-var burst_cap = 4
-var burst_cd = 450
-var full_auto = false
-var can_shoot
+var attack_cooldown: int
+var next_attack_time: int = 0
+var burst: int = 0
+var burst_cap: int = 4
+var burst_cd: int = 450
+var full_auto: bool = false
+var can_shoot: bool
 
 var is_dead
 
@@ -29,8 +29,8 @@ func _ready():
 	screensize = get_viewport().get_visible_rect().size
 
 #screenwrapping
-func _integrate_forces(state):
-	var xform = state.get_transform()
+func _integrate_forces(state: Physics2DDirectBodyState):
+	var xform: Transform2D = state.get_transform()
 	if xform.origin.x > screensize.x:
 		xform.origin.x = 0
 	if xform.origin.x < 0:
@@ -48,9 +48,7 @@ func auto():
 
 #checks ability to shoot and shoots
 func shoot():
-	var b = bullet.instance()
-	var c = blast.instance()
-	var now = OS.get_ticks_msec()
+	var now: int = OS.get_ticks_msec()
 	if now >= next_attack_time:
 		if full_auto == false:
 			if burst < burst_cap:
@@ -65,18 +63,19 @@ func shoot():
 			attack_cooldown = 200
 			can_shoot = true
 		if can_shoot:
-			var t = Timer.new()
+			var b: KinematicBody2D = bullet.instance() as KinematicBody2D
+			var c: Area2D = blast.instance() as Area2D
+			b.start($blaster.global_position, rotation)
 			owner.add_child(b)
-			owner.add_child(c)
-			b.transform = $blaster.global_transform
-			c.transform = $blaster.global_transform
+			$blastfx.add_child(c)
+			var t: Timer = Timer.new()
 			next_attack_time = now + attack_cooldown
 			t.set_wait_time(0.1)
 			t.set_one_shot(true)
 			self.add_child(t)
 			t.start()
 			yield(t, "timeout")
-			owner.remove_child(c)
+			$blastfx.remove_child(c)
 			
 
 #input for shooting
@@ -103,7 +102,7 @@ func thruster():
 		sound_played = false
 
 #defines rotation variable
-func rotate(delta):
+func get_rotate():
 	if Input.is_action_pressed("right"):
 		rot_dir = min(rot_dir + 100, 1000)
 	elif Input.is_action_pressed("left"):
@@ -114,7 +113,7 @@ func rotate(delta):
 #death controller
 func die():
 	is_dead = true
-	var t = Timer.new()
+	var t: Timer = Timer.new()
 	t.set_wait_time(1)
 	t.set_one_shot(true)
 	self.add_child(t)
@@ -123,9 +122,9 @@ func die():
 	owner.remove_child(spawn)
 
 #groups all control componenet major functions
-func get_input(delta):
+func get_input():
 	thruster()
-	rotate(delta)
+	get_rotate()
 	blaster()
 	auto()
 
@@ -134,6 +133,6 @@ func _physics_process(delta):
 	if is_dead:
 		pass
 	else:
-		get_input(delta)
+		get_input()
 	set_applied_force((10 * thrust.rotated(rotation)) * delta)
 	set_applied_torque((rot_dir * SPIN_THRUST) * delta)
