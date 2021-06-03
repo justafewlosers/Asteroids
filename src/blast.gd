@@ -1,21 +1,29 @@
-extends Area2D
+extends KinematicBody2D
 
-var speed = 1500
+var speed: int = 1500
+var velocity: Vector2 = Vector2()
+var collision: KinematicCollision2D
 
-onready var screen_size = get_viewport_rect().size
+onready var screen_size: Vector2 = get_viewport_rect().size
+
+
+func start(pos: Vector2, dir: float):
+	rotation = dir
+	position = pos
+	velocity = Vector2(speed, 0).rotated(rotation)
 
 func _ready():
-	var t = Timer.new()
+	var t: Timer = Timer.new()
 	t.set_wait_time(0.4)
 	t.set_one_shot(true)
 	self.add_child(t)
 	t.start()
 	yield(t, "timeout")
 	queue_free()
-		
+
 func _physics_process(delta):
 	screenwrap()
-	position += transform.x * speed * delta
+	collision = move_and_collide(velocity * delta)
 
 func screenwrap():
 	if position.x > screen_size.x:
