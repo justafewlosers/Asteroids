@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://assets/sprites/spaceship.png" type="Texture" id=1]
 [ext_resource path="res://common/asteroid.tscn" type="PackedScene" id=2]
@@ -9,6 +9,12 @@
 [ext_resource path="res://common/blast2.tscn" type="PackedScene" id=7]
 [ext_resource path="res://assets/music/asteroids.ogg" type="AudioStream" id=8]
 [ext_resource path="res://common/blast.tscn" type="PackedScene" id=9]
+[ext_resource path="res://assets/lifeheart.png" type="Texture" id=10]
+[ext_resource path="res://src/lives.gd" type="Script" id=11]
+[ext_resource path="res://src/collider.gd" type="Script" id=12]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 31.7236, 32.7151 )
 
 [node name="Asteroid" type="Node2D"]
 
@@ -41,11 +47,13 @@ position = Vector2( 70.7192, -0.529724 )
 stream = ExtResource( 5 )
 
 [node name="blastfx" type="Position2D" parent="KinematicBody2D"]
-position = Vector2( 70.381, -2.67276 )
+show_behind_parent = true
+position = Vector2( 70.381, 0 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="KinematicBody2D"]
 scale = Vector2( 1, 0.01 )
 polygon = PoolVector2Array( -25.2505, 7655.26, 19.9091, 2397.68, 33.947, 2437.41, 37.9199, 1298.48, 55.7983, 1152.8, 71.6903, -52.332, 65.5984, -635.035, 51.5605, -1363.42, 37.7875, -1482.61, 32.4902, -2555.31, 29.974, -2621.53, 21.7631, -2462.61, -0.220703, -4819.91, -27.3695, -7971.82, -32.5344, -7918.84, -51.6047, -6740.19, -52.929, -6236.95, -52.929, -2131.53, -61.802, -1985.85, -64.848, -1509.09, -64.1858, -462.875, -60.875, -171.523, -60.4777, -12.6016, -63.921, 252.262, -64.3182, 1444.16, -60.7426, 1854.7, -54.1209, 1987.14, -52.7966, 2132.81, -52.2668, 6397.15 )
+script = ExtResource( 12 )
 
 [node name="Backgroud" parent="." instance=ExtResource( 6 )]
 z_index = -1
@@ -56,3 +64,21 @@ autoplay = true
 
 [node name="asteroid" parent="." instance=ExtResource( 2 )]
 position = Vector2( 899.682, 345.724 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="asteroid"]
+shape = SubResource( 1 )
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource( 11 )
+
+[node name="Life" type="Sprite" parent="Node"]
+position = Vector2( 96.5119, 96.256 )
+texture = ExtResource( 10 )
+
+[node name="Life2" type="Sprite" parent="Node"]
+position = Vector2( 160.768, 97.5159 )
+texture = ExtResource( 10 )
+
+[node name="Life3" type="Sprite" parent="Node"]
+position = Vector2( 224.266, 97.0138 )
+texture = ExtResource( 10 )
